@@ -1,0 +1,101 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="a sample to showcase sales management system">
+    <meta name="author" content="Sreejith Raj">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>SampleKart</title>
+    <link href="{% static 'assets\dist\css\bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "css\index.css" %}">
+</head>
+<body>
+    <header>
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="container">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bag-heart-fill" viewBox="0 0 16 16">
+                        <path d="M11.5 4v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m0 6.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132"/>
+                    </svg>
+                    <strong>&nbsp;SampleKart</strong>
+                </a>
+                <div class="text-end">
+                    <a href="{% url "login" %}">
+                        <button type="button" class="btn btn-outline-light me-2">Login</button>
+                    </a>
+                    <a href="{% url "register" %}">
+                        <button type="button" class="btn btn-warning">Register</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% comment %} content  {% endcomment %}
+        <section class="py-5 text-center container">
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light">SampleKart</h1>
+                    <p class="lead text-muted">A Simple Webite to showcase the Sales Management System capabilities, Developed by Sreejith</p>
+                    <p>
+                        <a href="{% url "login" %}" class="btn btn-warning my-2">Login</a>
+                        <a href="{% url "register" %}" class="btn btn-secondary my-2">Register</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        {% comment %} cards {% endcomment %}
+
+        <div class="album py-3 bg-light">
+            <div class="container">
+                <div class='d-flex'>
+                    <div class='py-3 ms-auto'>
+                        <form>
+                            <div class="input-group">
+                                <label class="input-group-text" for="inputGroupSelect01">Filter</label>
+                                <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                  <option selected>Categories</option>
+                                  {% for items in categories %}
+                                  <option value="1">{{ items.category_name }}</option>
+                                  {% endfor %}
+                                </select>
+                                <button class="btn btn-warning" type="button">Go</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                    {% for items in products %}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <img class="bd-placeholder-img card-img-top" width="100%" height="225" src='{{ items.image.url }}' alt='{{ items.name }}' />
+                            <div class="card-body">
+                                <p class="card-text">{{ items.name }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">Enquiry</button>
+                                    </div>
+                                    <small class="text-muted">₹ {{ items.price }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div> <!--rowend-->
+            </div>
+        </div>
+    </main>
+    <footer class="text-muted py-5">
+        <div class="container">
+            <p class="float-end mb-0"><a href="#">Back to top</a></p>
+            <p class="float-start mb-0">SampleKart 2025 &copy; Sreejith Raj S S</p>
+        </div>
+    </footer>
+    <script src="{% static "assets\dist\js\bootstrap.bundle.min.js" %}"></script>
+</body>
+</html>
