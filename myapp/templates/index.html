@@ -54,16 +54,19 @@
             <div class="container">
                 <div class='d-flex'>
                     <div class='py-3 ms-auto'>
-                        <form>
+                        <form method='GET' action='{% url "home" %}'>
                             <div class="input-group">
-                                <label class="input-group-text" for="inputGroupSelect01">Filter</label>
-                                <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
-                                  <option selected>Categories</option>
-                                  {% for items in categories %}
-                                  <option value="1">{{ items.category_name }}</option>
-                                  {% endfor %}
+                                <label class="input-group-text" for="categoryfilter">Filter</label>
+                                <select class="form-select" name='category' id="categoryfilter" aria-label="Filtering By category">
+                                    <option value=''>All Categories</option>
+                                    {% for items in categories %}
+                                    <option value="{{ items.id }}" 
+                                    {% if request.GET.category == items.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ items.category_name }}
+                                    </option>
+                                    {% endfor %}
                                 </select>
-                                <button class="btn btn-warning" type="button">Go</button>
+                                <button class="btn btn-warning" type="submit">Go</button>
                             </div>
                         </form>
                     </div>
@@ -78,7 +81,9 @@
                                 <p class="card-text">{{ items.name }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Enquiry</button>
+                                        <a href='{% url "enquiry" items.id %}'>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">Enquiry</button>
+                                        </a>
                                     </div>
                                     <small class="text-muted">₹ {{ items.price }}</small>
                                 </div>

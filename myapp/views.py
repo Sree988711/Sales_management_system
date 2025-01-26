@@ -4,7 +4,12 @@ from django.shortcuts import redirect
 from .models import Admin,Product,Category,Enquiry
 # Create your views here.
 def index(request):
-    products=Product.objects.all()
+    categories_id=request.GET.get('category')
+    if categories_id:
+        products=Product.objects.filter(category_id=categories_id)
+    else:
+        products=Product.objects.all()
+
     categories=Category.objects.all()
     return render(request,'index.html',{
         'products':products,
@@ -43,5 +48,11 @@ def dashboard(request):
     details=Product.objects.all()
 
     return render(request,'dashboard.html',{
+        'details':details
+    })
+
+def enquiry(request,id):
+    details=Product.objects.get(id=id)
+    return render(request,'enquiry.html',{
         'details':details
     })
