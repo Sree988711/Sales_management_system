@@ -1,6 +1,7 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from .models import Admin,Product,Category,Enquiry
+from django.contrib import messages
 # Create your views here.
 def index(request):
     categories_id=request.GET.get('category')
@@ -81,4 +82,86 @@ def enquiry(request,id):
     
     return render(request,'enquiry.html',{
         'details':details
+    })
+
+def manage_categories(request):
+    categories=Category.objects.all()
+    if request.method=="POST":
+        category_name=request.POST.get("category_name")
+        Category.objects.create(category_name=category_name)
+        return redirect("manage_categories")
+    return render(request,"manage_categories.html",{"categories":categories})
+
+def delete_category(request,id):
+    category=get_object_or_404(Category,id=id)
+    category.delete()
+    return redirect("manage_categories")
+
+
+def manage_products(request):
+    categories=Category.objects.all()
+    products=Product.objects.all()
+    if request.method=="POST":
+        name=request.POST.get("name")
+        price=request.POST.get("price")
+        category_id=request.POST.get("category_id")
+        category=get_object_or_404(Category, id=category_id)
+        image=request.FILES.get("image")
+        Product.objects.create(name=name,price=price,category=category,image=image)
+        return redirect("manage_products")
+    return render(request,"manage_products.html",{
+        "products": products, 
+        "categories": categories
+    })
+
+def delete_product(request,id):
+    product=get_object_or_404(Product,id=id)
+    product.delete()
+    return redirect("manage_products")
+
+def edit_category(request, id):
+    category=get_object_or_404(Category, id=id)
+
+    if request.method=="POST":
+        category_name=request.POST.get('category_name')
+        
+        if category_name:
+            category.category_name=category_name
+            category.save()
+            messages.success(request,"Category updated successfully.")
+            return redirect("manage_categories")
+        else:
+            messages.error(request,"Category name cannot be empty.")
+
+    return render(request,"edit_category.html",{
+        "category": category
+    })
+
+def edit_product(request,id):
+    product=get_object_or_404(Product,id=id)
+    categories=Category.objects.all()
+
+    if request.method=="POST":
+        name=request.POST.get('name')
+        price=request.POST.get('price')
+        category_id=request.POST.get('category')
+        image=request.FILES.get('image')
+
+        if name and price and category_id:
+            product.name=name
+            product.price=price
+            product.category_id=category_id
+            
+            if image:
+                product.image=image
+
+            product.save()
+            messages.success(request,"Product updated successfully.")
+            return redirect("manage_products")
+        else:
+            messages.error(request,"Something wrong")
+
+    return render(request,"edit_product.html",{
+        "product": product,
+        "categories":categories
     })

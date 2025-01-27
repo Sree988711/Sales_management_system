@@ -73,90 +73,26 @@
         </nav>
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Dashboard</h1>
+                <h1 class="h2">Edit Category</h1>
             </div>
-
-            <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Image</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for items in details %}
-                        <tr>
-                            <td>{{ items.name }}</td>
-                            <td>{{ items.price }}</td>
-                            <td>{{ items.category }}</td>
-                            <td>{{ items.image }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-            <a href="{% url "manage_categories" %}">
-                <button type="button" class="btn btn-secondary btn-lg mb-3">Manage Category</button>
-            </a>
-            <a href="{% url 'manage_products' %}">
-                <button type="button" class="btn btn-secondary btn-lg mb-3">Manage Products</button>
-            </a>
-            
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Enquiries</h1>
-                <div class="btn-toolbar mb-2 mb-md-0">
-                    <div class="btn-group me-2">
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                    </div>
-                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                        <span data-feather="calendar"></span>
-                        This week
-                    </button>
+            <form method="post" class='row g-3'>
+                {% csrf_token %}
+                <div class='col-auto'>
+                    <label for="category_name">Category Name:</label>
                 </div>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col">Date</th>
-                            <th scope="col">Product</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Customer Name</th>
-                            <th scope="col">Address</th>
-                            <th scope="col">Phone Number</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for item in enquries %}
-                        <tr>
-                            <td>{{ item.enquiry_date }}</td>
-                            <td>{{ item.product }}</td>
-                            <td>{{ item.product_category }}</td>
-                            <td>{{ item.amount }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>{{ item.contact_person_name }}</td>
-                            <td>{{ item.address }}</td>
-                            <td>{{ item.mobile_number }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <a href="#">
-                <button type="button" class="btn btn-secondary btn-lg mb-3">Generate Report</button>
-            </a>
-            <a href='#'>
-                <button type="button" class="btn btn-secondary btn-lg mb-3">Change Password</button>
-            </a>
-            </div>
+                <div class='col-auto'>
+                    <input type="text" id="category_name" name="category_name" value="{{ category.category_name }}" class='form-control'>
+                </div>
+                <div class='col-auto'>
+                    <button type="submit" class='btn btn-secondary'>Save Changes</button>
+                </div>
+                <div class='col-auto'>
+                    <a href="{% url 'manage_categories' %}">
+                        <button class='btn btn-secondary'>Cancel</button>
+                    </a>
+                </div>
+            </form>
+               
         </main>
     </div>
 </div>
