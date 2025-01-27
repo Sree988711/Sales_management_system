@@ -11,5 +11,5 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter=('category',)
 @admin.register(Enquiry)
 class EnquiryAdmin(admin.ModelAdmin):
-    list_display=('id','enquiry_date','product','product_category','amount','contact_person_name','mobile_number')
+    list_display=('id','enquiry_date','product','product_category','amount','contact_person_name','mobile_number','status','remark')
     list_filter=('enquiry_date','product_category')

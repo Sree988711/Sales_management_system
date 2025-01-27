@@ -165,3 +165,35 @@ def edit_product(request,id):
         "product": product,
         "categories":categories
     })
+
+def manage_enquiry(request):
+    from_date=request.GET.get('from_date')
+    to_date=request.GET.get('to_date')
+
+    enquiry=Enquiry.objects.all()
+
+    if from_date and to_date:
+        enquiry=enquiry.filter(enquiry_date__range=[from_date,to_date])
+    elif from_date:
+        enquiry=enquiry.filter(enquiry_date__gte=from_date)
+    elif to_date:
+        enquiry=enquiry.filter(enquiry_date__lte=to_date)
+
+    return render(request,'manage_enquiry.html',{
+        'enquiry':enquiry,
+        'from_date':from_date,
+        'to_date':to_date
+    })
+
+def update_enquiry(request,id):
+    if request.method=='POST':
+        enquiry=get_object_or_404(Enquiry,id=id)
+        status=request.POST.get('status')=='True'
+        remark=request.POST.get('remark')
+
+        enquiry.status=status
+        enquiry.remark=remark
+        enquiry.save()
+
+        messages.success(request, f"Enquiry for {enquiry.contact_person_name} updated successfully.")
+        return redirect('manage_enquiry')

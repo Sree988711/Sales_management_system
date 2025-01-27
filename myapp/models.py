@@ -35,6 +35,8 @@ class Enquiry(models.Model):
     address=models.TextField(null=True,blank=True)
     quantity=models.PositiveIntegerField(default=1)
     mobile_number=models.CharField(max_length=15,null=False,blank=False)
+    status=models.BooleanField(default=False)
+    remark=models.TextField(null=True,blank=True)
     def __str__(self):
         return f"Enquiry by {self.contact_person_name} on {self.enquiry_date}"
     class Meta:
