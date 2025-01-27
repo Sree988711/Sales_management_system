@@ -1,6 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from django.shortcuts import redirect
 from .models import Admin,Product,Category,Enquiry
 # Create your views here.
 def index(request):
@@ -46,13 +45,40 @@ def register(request):
 
 def dashboard(request):
     details=Product.objects.all()
-
+    enquries=Enquiry.objects.all()
     return render(request,'dashboard.html',{
-        'details':details
+        'details':details,
+        'enquries':enquries
     })
 
 def enquiry(request,id):
-    details=Product.objects.get(id=id)
+    try:
+        details=Product.objects.get(id=id)
+    except Product.DoesNotExist:
+        return HttpResponse('Product not found')
+    
+    if request.method=='POST':
+        contact_person_name=request.POST.get('name')
+        address=request.POST.get('address')
+        quantity=request.POST.get('quantity')
+        amount=request.POST.get('amount')
+        mobile_number=request.POST.get('phone')
+
+        try:
+            enquiry=Enquiry(
+                contact_person_name=contact_person_name,
+                address=address,
+                quantity=quantity,
+                amount=amount,
+                mobile_number=mobile_number,
+                product=details,
+                product_category=details.category,
+            )
+            enquiry.save()
+            return HttpResponse('Data saved Successfully')
+        except Exception:
+            return HttpResponse('Error saving to database')
+    
     return render(request,'enquiry.html',{
         'details':details
     })
