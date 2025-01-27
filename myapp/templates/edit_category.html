@@ -51,19 +51,19 @@
                     </a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url "manage_enquiry" %}">
                         <span data-feather="users"></span>
                         Manage Enquiries
                     </a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url "generate_enquiry_report" %}">
                         <span data-feather="bar-chart-2"></span>
-                        Reports
+                        Generate Report
                     </a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url "change_password" %}">
                         <span data-feather="layers"></span>
                         Change Password
                     </a>
@@ -75,6 +75,16 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Edit Category</h1>
             </div>
+            {% if messages %}
+            <div>
+                {% for message in messages %}
+                <div class="alert 
+                    {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
             <form method="post" class='row g-3'>
                 {% csrf_token %}
                 <div class='col-auto'>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+        }
+        th, td {
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Individual Enquiry Report</h2>
+    <p><strong>Date:</strong> {{ enquiry.enquiry_date }}</p>
+    <p><strong>Product:</strong> {{ enquiry.product }}</p>
+    <p><strong>Category:</strong> {{ enquiry.product_category }}</p>
+    <p><strong>Amount:</strong> {{ enquiry.amount }}</p>
+    <p><strong>Quantity:</strong> {{ enquiry.quantity }}</p>
+    <p><strong>Customer Name:</strong> {{ enquiry.contact_person_name }}</p>
+    <p><strong>Address:</strong> {{ enquiry.address }}</p>
+    <p><strong>Phone:</strong> {{ enquiry.mobile_number }}</p>
+    <p><strong>Status:</strong> {{ enquiry.status|yesno:"Contacted,Not Contacted" }}</p>
+    <p><strong>Remark:</strong> {{ enquiry.remark }}</p>
+</body>
+</html>

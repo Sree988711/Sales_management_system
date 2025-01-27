@@ -15,4 +15,8 @@ urlpatterns = [
     path('products/edit/<int:id>/', views.edit_product, name='edit_product'),
     path('manage_enquiy/',views.manage_enquiry,name='manage_enquiry'),
     path('enquiry/update/<int:id>/',views.update_enquiry,name='update_enquiry'),
+    path('enquiries/report/',views.generate_enquiry_report,name='generate_enquiry_report'),
+    path('enquiries/report/<int:id>/',views.generate_individual_report,name='generate_individual_report'),
+    path('change_password/',views.change_password,name='change_password')
 ]
+

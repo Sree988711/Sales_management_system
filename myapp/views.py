@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from .models import Admin,Product,Category,Enquiry
 from django.contrib import messages
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 # Create your views here.
 def index(request):
     categories_id=request.GET.get('category')
@@ -23,26 +25,27 @@ def login(request):
         try:
             adminobj=Admin.objects.get(email=email,password=password)
             print(adminobj)
+            return redirect('dashboard')
         except Admin.DoesNotExist:
-            return HttpResponse('Wrong Credentials')
+            messages.error(request,"Incorrect email/password")
         
-        return redirect('dashboard')
     return render(request,'login.html')
 
 def register(request):
-    if request.method=='POST':
-        email=request.POST.get('register_email')
-        password=request.POST.get('register_password')
-        adminobj=Admin.objects.all()
-        for items in adminobj:
-            if items.email==email and items.password==password:
-                return HttpResponse('Duplicate Credentials')
-            else:
-                newobj=Admin.objects.create(email=email,password=password)
-                newobj.save()
-                return HttpResponse('Credentials added Successfully')
+    if request.method == 'POST':
+        email = request.POST.get('register_email')
+        password = request.POST.get('register_password')
 
-    return render(request,'register.html')
+        if Admin.objects.filter(email=email).exists():
+            messages.error(request, "Duplicate Entry: This email is already registered.")
+            return redirect('register')
+
+        new_admin = Admin.objects.create(email=email, password=password)
+        new_admin.save()
+        messages.success(request, "Registration successful! Please log in.")
+        return redirect('login')
+
+    return render(request, 'register.html')
 
 def dashboard(request):
     details=Product.objects.all()
@@ -76,9 +79,10 @@ def enquiry(request,id):
                 product_category=details.category,
             )
             enquiry.save()
-            return HttpResponse('Data saved Successfully')
+            messages.success(request,'Enquiry sent')
+            return redirect('enquiry')
         except Exception:
-            return HttpResponse('Error saving to database')
+            pass
     
     return render(request,'enquiry.html',{
         'details':details
@@ -197,3 +201,41 @@ def update_enquiry(request,id):
 
         messages.success(request, f"Enquiry for {enquiry.contact_person_name} updated successfully.")
         return redirect('manage_enquiry')
+    
+def render_to_pdf(template_src,context_dict={}):
+    template=get_template(template_src)
+    html=template.render(context_dict)
+    response=HttpResponse(content_type='application/pdf')
+    pisa_status=pisa.CreatePDF(html,dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors with the report generation',content_type='text/plain')
+    return response
+
+def generate_enquiry_report(request):
+    enquiries=Enquiry.objects.all()
+    context={'enquiries':enquiries}
+    return render_to_pdf('enquiry_report.html',context)
+
+def generate_individual_report(request,id):
+    enquiry=Enquiry.objects.get(id=id)
+    context={'enquiry':enquiry}
+    return render_to_pdf('individual_report.html',context)
+
+def change_password(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        new_password = request.POST.get('password')
+
+        if not email or not new_password:
+            messages.error(request,"Email and password are required!")
+            return render(request,'change_password.html')
+
+        try:
+            admin=Admin.objects.get(email=email)
+            admin.password=new_password
+            admin.save()
+            messages.success(request,"Password updated successfully!")
+        except Admin.DoesNotExist:
+            messages.error(request,"Email does not exist in the database!")
+
+    return render(request,'change_password.html')

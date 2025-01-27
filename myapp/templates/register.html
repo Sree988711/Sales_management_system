@@ -64,8 +64,17 @@
         </style>
     </head>
     <body class="text-center">
-        
         <main class="form-signin">
+            {% if messages %}
+            <div>
+                {% for message in messages %}
+                <div class="alert 
+                    {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
             <form method='POST'>
                 {% csrf_token %}
                 <svg xmlns="http://www.w3.org/2000/svg" width="72" height="57" fill="currentColor" class="bi bi-bag-heart-fill" viewBox="0 0 16 16">
@@ -83,12 +92,6 @@
                     <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name='register_password'>
                     <label for="floatingPassword">Password</label>
                 </div>
-
-                {% comment %} <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" value="remember-me"> Remember me
-                </label>
-                </div> {% endcomment %}
 
                 <button class="w-100 btn btn-lg btn-secondary" type="submit">Register Now</button>
 
